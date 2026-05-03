@@ -4,7 +4,8 @@ import './App.css';
 import { MarioSVG, PrincessSVG, CastleSVG, JSSUniversitySVG } from './components/Sprites';
 
 const Firework = ({ x, y, color, delay = 0 }) => {
-  const particles = Array.from({ length: 24 });
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const particles = Array.from({ length: isMobile ? 12 : 24 });
   return (
     <div style={{ position: 'absolute', left: x, top: y, zIndex: 15, pointerEvents: 'none' }}>
       {particles.map((_, i) => {
@@ -31,8 +32,7 @@ const Firework = ({ x, y, color, delay = 0 }) => {
               position: 'absolute',
               width: '12px',
               height: '12px',
-              backgroundColor: color,
-              boxShadow: `0 0 0 ${color}`
+              backgroundColor: color
             }}
           />
         );
