@@ -43,7 +43,6 @@ const Firework = ({ x, y, color, delay = 0 }) => {
 
 function App() {
 
-  const BASE_URL = "http://localhost:5000"
   const marioControls = useAnimation();
   const textControls = useAnimation();
   const endSceneControls = useAnimation();
@@ -165,7 +164,8 @@ function App() {
   };
 
   const submitForm = () => {
-    fetch("http://localhost:5000/api/check_key",{
+    const apiUrl = import.meta.env.VITE_BACKEND_URL || "";
+    fetch(`${apiUrl}/api/check_key`,{
       method:"POST",
        headers: {
     'Content-Type': 'application/json',
