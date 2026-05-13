@@ -1,0 +1,495 @@
+.app-container {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.background-svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+/* --- Curtain Transition Effect (Pure CSS) --- */
+.curtain {
+  position: fixed;
+  top: 0;
+  width: 50vw;
+  height: 100vh;
+  /* Pure CSS curtain folds using repeating gradients */
+  background: repeating-linear-gradient(
+    to right,
+    #09166D 0%,
+    #111F97 4%,
+    #09166D 8%
+  );
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  z-index: 50; /* Above everything else */
+  transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Left curtain originates from the left edge */
+.left-curtain {
+  left: 0;
+  transform-origin: left;
+}
+
+/* Right curtain originates from the right edge */
+.right-curtain {
+  right: 0;
+  transform-origin: right;
+}
+
+/* When idle or opening, the curtains compress to 0 width, simulating bunching up and hiding completely */
+.left-curtain.idle, .left-curtain.opening {
+  transform: scaleX(0);
+}
+.right-curtain.idle, .right-curtain.opening {
+  transform: scaleX(0);
+}
+
+/* When closing, the curtains extend to their full 50vw width to meet in the middle */
+.left-curtain.closing, .right-curtain.closing {
+  transform: scaleX(1);
+}
+
+
+/* --- Main Content --- */
+.content-layer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: -50px;
+  width: 100%;
+}
+
+.screen-1, .screen-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- Screen 1 Styles --- */
+.logo-container {
+  margin-bottom: 4rem;
+}
+
+.logo-container img {
+  height: 120px;
+  object-fit: contain;
+}
+
+.welcome-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 6rem;
+  color: #F8DA5D;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.6);
+  text-shadow: 3px 4px 5px rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.subtitle-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.2rem;
+  color: #F8DA5D;
+  margin-bottom: 3.5rem;
+  letter-spacing: 1.5px;
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.6);
+}
+
+.start-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: #000;
+  background: linear-gradient(to bottom, #FFF3B6, #D7A32F);
+  border: none;
+  padding: 0.6rem 5rem;
+  border-radius: 60px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 3px 8px rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.start-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), inset 0 3px 8px rgba(255, 255, 255, 0.9), inset 0 -3px 5px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+}
+
+.start-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 2px 5px rgba(255, 255, 255, 0.8);
+}
+
+
+/* --- Screen 2 Styles --- */
+.welcome-to-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  color: #FFFFFF;
+  letter-spacing: 3px;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.welcome-to-text .star {
+  font-size: 2rem;
+  color: #F8DA5D; /* Golden stars */
+  /* If you want exact stars, we could use SVG, but this unicode star is a good placeholder */
+}
+
+.latent-logo-container {
+  margin-bottom: 3rem;
+  width: 100%;
+  max-width: 800px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.latent-logo-container.dropdown-open {
+  max-width: 350px;
+  margin-bottom: 1rem;
+}
+
+.latent-logo {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+}
+
+/* Custom Dropdown Styling */
+.custom-dropdown-container {
+  position: relative;
+  width: 320px;
+  margin: 0 auto;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #0E155A;
+  border: 2px solid #F8DA5D;
+  border-radius: 50px;
+  padding: 0.8rem 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s ease;
+}
+
+.dropdown-header:hover {
+  background-color: #111B66;
+}
+
+.dropdown-header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.selected-text {
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+}
+
+.chevron-icon {
+  transition: transform 0.3s ease;
+}
+
+/* The open menu */
+.dropdown-list {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background-color: #0E155A;
+  border: 2px solid #F8DA5D;
+  border-radius: 16px;
+  padding: 10px 0;
+  list-style: none;
+  margin: 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  /* Max height removed so the whole dropdown opens without a scrollbar inside it */
+}
+
+/* Custom scrollbar for the dropdown */
+.dropdown-list::-webkit-scrollbar {
+  width: 8px;
+}
+.dropdown-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dropdown-list::-webkit-scrollbar-thumb {
+  background-color: #F8DA5D;
+  border-radius: 10px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid rgba(248, 218, 93, 0.1);
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #1C2880;
+}
+
+.dropdown-item .item-text {
+  color: #FFFFFF;
+  font-size: 1.2rem;
+  flex-grow: 1;
+  text-align: left;
+  margin-left: 15px;
+}
+
+.dropdown-item.empty {
+  color: #FFFFFF;
+  justify-content: center;
+  font-style: italic;
+}
+
+.gold-icon {
+  flex-shrink: 0;
+}
+
+/* --- Screen 3 & 4 (Glass Box Layouts) --- */
+.screen-3, .screen-4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.glass-box {
+  background-color: #0E155A;
+  border: 2px solid #F8DA5D;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  width: 90%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.box-header {
+  color: #F8DA5D;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+}
+
+.box-subtitle {
+  color: #FFFFFF;
+  font-size: 1rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: #111B66;
+  border: 1.5px solid #F8DA5D;
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  flex-grow: 1;
+}
+
+.input-wrapper input {
+  background: transparent;
+  border: none;
+  color: #FFF;
+  flex-grow: 1;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.input-wrapper input::placeholder {
+  color: #8892B0;
+}
+
+.unlock-btn {
+  background: linear-gradient(to bottom, #FFF3B6, #D7A32F);
+  color: #000;
+  border-radius: 30px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  padding: 0.5rem 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5), inset 0 2px 5px rgba(255, 255, 255, 0.8);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  letter-spacing: 1px;
+}
+
+.unlock-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 2px 5px rgba(255, 255, 255, 0.9);
+}
+
+.unlock-btn:active {
+  transform: scale(0.95);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 2.5rem 0 1.5rem 0;
+  width: 100%;
+}
+
+.divider .line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: rgba(248, 218, 93, 0.3);
+}
+
+.help-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #FFF;
+  font-size: 0.95rem;
+}
+
+.assigned-juniors-btn {
+  background-color: #000;
+  color: #F8DA5D;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: 1px solid #F8DA5D;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.assigned-juniors-btn:hover {
+  background-color: #111B66;
+}
+
+/* --- Screen 4 specific styles --- */
+.juniors-box {
+  max-width: 600px; /* Slightly wider for the list */
+  padding: 2.5rem 3rem;
+}
+
+.hey-senior {
+  color: #FFF;
+  font-size: 2.2rem;
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1.5px;
+  margin-bottom: 1rem;
+}
+
+.hey-senior .senior-name {
+  color: #F8DA5D;
+}
+
+.ribbon-banner {
+  background: linear-gradient(to bottom, #FFF3B6, #D7A32F);
+  color: #000;
+  font-family: 'Bebas Neue', sans-serif;
+  padding: 6px 35px;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 2.5rem;
+  font-size: 1.4rem;
+  letter-spacing: 1.5px;
+  clip-path: polygon(0 0, 100% 0, 95% 50%, 100% 100%, 0 100%, 5% 50%);
+}
+
+.juniors-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.junior-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.junior-item:last-child {
+  border-bottom: none;
+}
+
+.junior-name {
+  color: #FFF;
+  font-size: 1.1rem;
+  flex-grow: 1;
+  margin-left: 20px;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.junior-phone {
+  color: #FFF;
+  font-size: 1.1rem;
+  font-family: monospace;
+}
