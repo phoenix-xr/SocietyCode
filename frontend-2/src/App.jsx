@@ -3,6 +3,14 @@ import './App.css';
 import ncsLogo from './assets/ncs.png';
 import bgSvg from './assets/bg.svg';
 import gotLatentLogo from './assets/ncs_got_latent.svg';
+import lockSvg from './assets/lock.svg';
+
+// Preload critical images as early as possible
+const preloadImages = [ncsLogo, bgSvg, gotLatentLogo, lockSvg];
+preloadImages.forEach((src) => {
+  const img = new Image();
+  img.src = src;
+});
 
 const GoldenUserIcon = () => (
   <svg className="gold-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -200,8 +208,8 @@ function App() {
               <div className="box-subtitle">Enter your credentials to reveal the final surprise</div>
               
               <div className="input-group">
-                <GoldenLockIcon />
                 <div className="input-wrapper">
+                  <img src={lockSvg} alt="Lock" className="input-lock-icon" />
                   <input type="password" placeholder="Enter Password" />
                   <EyeIcon />
                 </div>

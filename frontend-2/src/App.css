@@ -374,11 +374,19 @@
 .input-wrapper {
   display: flex;
   align-items: center;
+  gap: 12px;
   background-color: #111B66;
   border: 1.5px solid #F8DA5D;
   border-radius: 8px;
   padding: 0.8rem 1rem;
   flex-grow: 1;
+}
+
+.input-lock-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .input-wrapper input {
@@ -582,5 +590,10 @@
 
   .screen-2.dropdown-open {
     transform: translateY(-30vh);
+  }
+
+  .input-lock-icon {
+    width: 20px;
+    height: 20px;
   }
 }
