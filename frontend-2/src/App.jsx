@@ -125,7 +125,7 @@ function App() {
             </div>
             
             <h1 className="welcome-text">
-              WELCOME SENIORS <span role="img" aria-label="graduation cap">🎓</span>
+              WELCOME SENIORS<span role="img" aria-label="graduation cap">🎓</span>
             </h1>
             
             <h2 className="subtitle-text">
@@ -139,7 +139,7 @@ function App() {
         )}
 
         {screen === 2 && (
-          <div className="screen-2">
+          <div className={`screen-2 ${isDropdownOpen ? 'dropdown-open' : ''}`}>
             <div className="welcome-to-text">
               <span className="star">✧</span> WELCOME TO <span className="star">✧</span>
             </div>
@@ -239,7 +239,7 @@ function App() {
               <img src={gotLatentLogo} alt="NCS's Got Latent" className="latent-logo" />
             </div>
             <div className="glass-box juniors-box">
-              <h2 className="hey-senior">Hey, <span className="senior-name">[{selectedName || "Senior name"}]</span></h2>
+              <h2 className="hey-senior">Hey, <span className="senior-name">{selectedName || "Senior name"}</span></h2>
               <div className="ribbon-banner">YOUR JUNIORS</div>
               
               <div className="juniors-list">

@@ -84,6 +84,14 @@
   animation: fadeIn 0.5s ease-in-out;
 }
 
+.screen-2 {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.screen-2.dropdown-open {
+  transform: translateY(-25vh);
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -102,24 +110,38 @@
 .welcome-text {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 6rem;
-  color: #F8DA5D;
   margin-bottom: 0.5rem;
   letter-spacing: 2px;
-  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.6);
-  text-shadow: 3px 4px 5px rgba(0, 0, 0, 0.6);
+  
+  background: linear-gradient(to bottom, #FDF092, #DCA93C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  
+  filter: drop-shadow(3px 4px 5px rgba(0, 0, 0, 0.6));
+  
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 4px;
+}
+
+.welcome-text span {
+  -webkit-text-fill-color: initial;
+  color: initial;
 }
 
 .subtitle-text {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 3.2rem;
-  color: #F8DA5D;
   margin-bottom: 3.5rem;
   letter-spacing: 1.5px;
-  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
-  text-shadow: 2px 3px 4px rgba(0, 0, 0, 0.6);
+  
+  background: linear-gradient(to bottom, #FDF092, #DCA93C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  
+  filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.6));
 }
 
 .start-btn {
@@ -159,6 +181,14 @@
   display: flex;
   align-items: center;
   gap: 15px;
+  transition: all 0.4s ease;
+}
+
+.screen-2.dropdown-open .welcome-to-text {
+  opacity: 0;
+  height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
 }
 
 .welcome-to-text .star {
@@ -492,4 +522,65 @@
   color: #FFF;
   font-size: 1.1rem;
   font-family: monospace;
+}
+
+/* --- Mobile Responsiveness for Screen 1 --- */
+@media (max-width: 768px) {
+  .logo-container {
+    margin-bottom: 2.5rem;
+  }
+
+  .logo-container img {
+    height: 80px;
+  }
+
+  .welcome-text {
+    font-size: 4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+  }
+
+  .subtitle-text {
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+    padding: 0 1rem;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .start-btn {
+    font-size: 2.2rem;
+    padding: 0.5rem 3.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-container {
+    margin-bottom: 2rem;
+  }
+
+  .logo-container img {
+    height: 60px;
+  }
+
+  .welcome-text {
+    font-size: 3rem;
+    gap: 4px;
+  }
+
+  .subtitle-text {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .start-btn {
+    font-size: 1.8rem;
+    padding: 0.5rem 3rem;
+  }
+
+  .screen-2.dropdown-open {
+    transform: translateY(-30vh);
+  }
 }
