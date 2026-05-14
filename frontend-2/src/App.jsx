@@ -4,6 +4,7 @@ import ncsLogo from './assets/ncs.png';
 import bgSvg from './assets/bg.svg';
 import gotLatentLogo from './assets/ncs_got_latent.svg';
 import lockSvg from './assets/lock.svg';
+import Game from './Game';
 
 // Preload critical images as early as possible
 const preloadImages = [ncsLogo, bgSvg, gotLatentLogo, lockSvg];
@@ -67,15 +68,41 @@ const GoldenLockIconSmall = () => (
 function App() {
   const [screen, setScreen] = useState(1);
   const [curtainPhase, setCurtainPhase] = useState('idle');
-  const [names, setNames] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedName, setSelectedName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [juniors, setJuniors] = useState([
     // Mock data based on the provided design
     { name: "PIYUSH GAUTAM", phone: "+91 9555580183" },
     { name: "BHASKAR SHAH", phone: "+91 6307946728" },
     { name: "DARSHITA JAIN", phone: "+91 8700049486" }
   ]);
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!username || !password) {
+      alert("Please enter both username and password.");
+      return;
+    }
+    setLoginLoading(true);
+    try {
+      const res = await fetch('https://society-backend-ashy.vercel.app/api/check_pass', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user: username, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        triggerTransition('game');
+      } else {
+        alert(data.error || "Invalid credentials");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      alert("Error checking credentials. Please try again.");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
 
   const triggerTransition = (targetScreen) => {
     setCurtainPhase('closing');
@@ -87,18 +114,6 @@ function App() {
       }, 1500);
     }, 1500);
   };
-
-  useEffect(() => {
-    // Prefetch names as soon as the app loads
-    fetch('https://society-backend-ashy.vercel.app/api/get_names')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.names) {
-          setNames(data.names);
-        }
-      })
-      .catch(err => console.error("Failed to fetch names:", err));
-  }, []);
 
   // Fetch assigned juniors when moving to screen 4
   const fetchAssignedJuniors = (user) => {
@@ -120,12 +135,17 @@ function App() {
 
   return (
     <div className="app-container">
-      <img src={bgSvg} alt="Background" className="background-svg" />
+      {screen !== 'game' && <img src={bgSvg} alt="Background" className="background-svg" />}
 
-      <div className={`curtain left-curtain ${curtainPhase}`} />
-      <div className={`curtain right-curtain ${curtainPhase}`} />
+      <img src={ncsLogo} alt="NCS Logo" className="global-ncs-logo" />
 
-      <div className="content-layer">
+      <div className={`curtain left-curtain ${curtainPhase}`} style={{ zIndex: 9999 }} />
+      <div className={`curtain right-curtain ${curtainPhase}`} style={{ zIndex: 9999 }} />
+
+      {screen === 'game' ? (
+        <Game />
+      ) : (
+        <div className="content-layer">
         {screen === 1 && (
           <div className="screen-1">
             <div className="logo-container">
@@ -147,58 +167,8 @@ function App() {
         )}
 
         {screen === 2 && (
-          <div className={`screen-2 ${isDropdownOpen ? 'dropdown-open' : ''}`}>
-            <div className="welcome-to-text">
-              <span className="star">✧</span> WELCOME TO <span className="star">✧</span>
-            </div>
-            <div className={`latent-logo-container ${isDropdownOpen ? 'dropdown-open' : ''}`}>
-              <img src={gotLatentLogo} alt="NCS's Got Latent" className="latent-logo" />
-            </div>
-            
-            <div className="custom-dropdown-container">
-              <div 
-                className="dropdown-header" 
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                <div className="dropdown-header-left">
-                  <GoldenUserIcon />
-                  <span className="selected-text">{selectedName || "Select Your Name"}</span>
-                </div>
-                <svg className="chevron-icon" style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0)' }} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F8DA5D" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </div>
-              
-              {isDropdownOpen && (
-                <ul className="dropdown-list">
-                  {names.length === 0 ? (
-                    <li className="dropdown-item empty">Loading...</li>
-                  ) : (
-                    names.map((name, idx) => (
-                      <li 
-                        key={idx} 
-                        className="dropdown-item" 
-                        onClick={() => {
-                          setSelectedName(name);
-                          setIsDropdownOpen(false);
-                          triggerTransition(3);
-                        }}
-                      >
-                        <GoldenUserIcon />
-                        <span className="item-text">{name}</span>
-                        <GoldenCheckIcon isSelected={selectedName === name} />
-                      </li>
-                    ))
-                  )}
-                </ul>
-              )}
-            </div>
-          </div>
-        )}
-
-        {screen === 3 && (
-          <div className="screen-3">
-            <div className="latent-logo-container dropdown-open">
+          <div className="screen-2">
+            <div className="latent-logo-container">
               <img src={gotLatentLogo} alt="NCS's Got Latent" className="latent-logo" />
             </div>
             <div className="glass-box">
@@ -207,47 +177,48 @@ function App() {
               </div>
               <div className="box-subtitle">Enter your credentials to reveal the final surprise</div>
               
-              <div className="input-group">
-                <div className="input-wrapper">
-                  <img src={lockSvg} alt="Lock" className="input-lock-icon" />
-                  <input type="password" placeholder="Enter Password" />
-                  <EyeIcon />
+              <div className="inputs-container">
+                <div className="input-group">
+                  <div className="input-wrapper">
+                    <GoldenUserIcon />
+                    <input 
+                      type="text" 
+                      placeholder="Enter Username" 
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </div>
+                </div>
+                
+                <div className="input-group">
+                  <div className="input-wrapper">
+                    <img src={lockSvg} alt="Lock" className="input-lock-icon" />
+                    <input 
+                      type="password" 
+                      placeholder="Enter Password" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <EyeIcon />
+                  </div>
                 </div>
               </div>
               
-              <button className="unlock-btn">
-                Unlock Now <GoldenLockIconSmall />
+              <button className="unlock-btn" onClick={handleLogin} disabled={loginLoading}>
+                {loginLoading ? "Loading..." : "Unlock Now"} <GoldenLockIconSmall />
               </button>
               
-              <div className="divider">
-                <div className="line"></div>
-                <span className="star">✧</span>
-                <div className="line"></div>
-              </div>
-              
-              <div className="help-text">
-                <ShieldHelpIcon /> Need help? Contact your 
-                <span 
-                  className="assigned-juniors-btn" 
-                  onClick={() => {
-                    fetchAssignedJuniors(selectedName);
-                    triggerTransition(4);
-                  }}
-                >
-                  assigned juniors
-                </span>
-              </div>
             </div>
           </div>
         )}
 
-        {screen === 4 && (
-          <div className="screen-4">
-            <div className="latent-logo-container dropdown-open">
+        {screen === 3 && (
+          <div className="screen-3">
+            <div className="latent-logo-container">
               <img src={gotLatentLogo} alt="NCS's Got Latent" className="latent-logo" />
             </div>
             <div className="glass-box juniors-box">
-              <h2 className="hey-senior">Hey, <span className="senior-name">{selectedName || "Senior name"}</span></h2>
+              <h2 className="hey-senior">Hey, <span className="senior-name">{username || "Senior name"}</span></h2>
               <div className="ribbon-banner">YOUR JUNIORS</div>
               
               <div className="juniors-list">
@@ -262,7 +233,8 @@ function App() {
             </div>
           </div>
         )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

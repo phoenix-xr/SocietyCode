@@ -63,22 +63,22 @@ app.post('/api/check_pass', async (req, res) => {
 });
 
 // get_qr_code(): accepts "user", "password" and gives out "qr_code" field from mongo db
-app.post('/api/get_qr_code', async (req, res) => {
-  try {
-    const { user, password } = req.body;
-    if (!user || !password) {
-      return res.status(400).json({ success: false, error: "user and password are required in request body" });
-    }
-    const record = await Cred.findOne({ user, password }, { qr_code: 1, _id: 0 });
-    if (record) {
-      res.json({ success: true, qr_code: record.qr_code });
-    } else {
-      res.status(401).json({ success: false, error: "Invalid credentials" });
-    }
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
+// app.post('/api/get_qr_code', async (req, res) => {
+//   try {
+//     const { user, password } = req.body;
+//     if (!user || !password) {
+//       return res.status(400).json({ success: false, error: "user and password are required in request body" });
+//     }
+//     const record = await Cred.findOne({ user, password }, { qr_code: 1, _id: 0 });
+//     if (record) {
+//       res.json({ success: true, qr_code: record.qr_code });
+//     } else {
+//       res.status(401).json({ success: false, error: "Invalid credentials" });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ success: false, error: err.message });
+//   }
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
