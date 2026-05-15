@@ -1,42 +1,81 @@
 import { useRef, useEffect, useState } from 'react';
+import * as PIXI from 'pixi.js';
 import './Game.css';
-import { MarioSVG, JSSUniversitySVG, PrincessSVG, CastleSVG, GoombaSVG } from './components/Sprites';
-import {useInput} from './components/useInput';
+import { MarioSVGString, GoombaSVGString, CastleSVGString, PrincessSVGString, JSSUniversitySVGString, BlockSVGString } from './components/SpriteStrings';
+import { useInput } from './components/useInput';
 
-// 1. Hole first
-// 2. Confined space (two pillars)
-// 3. Moving enemy inside the confined space
-const obstacles = [
-  { id: 1, type: 'hole', x: 400, y: 0, width: 150, height: 64 }, 
-  { id: 2, type: 'pillar', x: 800, y: 64, width: 64, height: 96 },
-  { id: 3, type: 'enemy', x: 950, y: 64, width: 40, height: 40, vx: -3, minX: 864, maxX: 1200 }, // Enemy patrols between pillars
-  { id: 4, type: 'pillar', x: 1200, y: 64, width: 64, height: 96 },
-];
+// Level Designer Config
+const LevelConfig = {
+  worldWidth: 7900,
+  princessX: 7200,
+  castleX: 7500,
+  groundHeight: 64,
+  ceilingHeight: 100,
+  items: [
+    { type: "ground", x: 0, y: 0, width: 2944, height: 64 },
+    { type: "ground", x: 3072, y: 0, width: 1920, height: 64 },
+    { type: "ground", x: 5120, y: 0, width: 1408, height: 64 },
+    { type: "ground", x: 6592, y: 0, width: 832, height: 64 },
+    { type: "enemy", x: 768, y: 64, width: 40, height: 40, vx: -3, minX: 640, maxX: 896 },
+    { type: "enemy", x: 1088, y: 64, width: 40, height: 40, vx: -3, minX: 960, maxX: 1216 },
+    { type: "enemy", x: 1472, y: 64, width: 40, height: 40, vx: -3, minX: 1344, maxX: 1600 },
+    { type: "enemy", x: 1536, y: 64, width: 40, height: 40, vx: -3, minX: 1408, maxX: 1664 },
+    { type: "pillar", x: 1792, y: 64, width: 64, height: 128 },
+    { type: "enemy", x: 1984, y: 64, width: 40, height: 40, vx: -3, minX: 1856, maxX: 2112 },
+    { type: "pillar", x: 2112, y: 64, width: 64, height: 192 },
+    { type: "enemy", x: 2304, y: 64, width: 40, height: 40, vx: -3, minX: 2176, maxX: 2432 },
+    { type: "pillar", x: 2432, y: 64, width: 64, height: 256 },
+    { type: "enemy", x: 2688, y: 64, width: 40, height: 40, vx: -3, minX: 2560, maxX: 2816 },
+    { type: "enemy", x: 2752, y: 64, width: 40, height: 40, vx: -3, minX: 2624, maxX: 2880 },
+    { type: "enemy", x: 3264, y: 64, width: 40, height: 40, vx: -3, minX: 3136, maxX: 3392 },
+    { type: "enemy", x: 3328, y: 64, width: 40, height: 40, vx: -3, minX: 3200, maxX: 3456 },
+    { type: "enemy", x: 3840, y: 64, width: 40, height: 40, vx: -3, minX: 3712, maxX: 3968 },
+    { type: "hardblock", x: 4160, y: 64, width: 64, height: 64 },
+    { type: "hardblock", x: 4224, y: 64, width: 64, height: 128 },
+    { type: "hardblock", x: 4288, y: 64, width: 64, height: 192 },
+    { type: "hardblock", x: 4352, y: 64, width: 64, height: 256 },
+    { type: "hardblock", x: 4480, y: 64, width: 64, height: 256 },
+    { type: "hardblock", x: 4544, y: 64, width: 64, height: 192 },
+    { type: "hardblock", x: 4608, y: 64, width: 64, height: 128 },
+    { type: "hardblock", x: 4672, y: 64, width: 64, height: 64 },
+    { type: "hardblock", x: 4736, y: 64, width: 64, height: 64 },
+    { type: "hardblock", x: 4800, y: 64, width: 64, height: 128 },
+    { type: "hardblock", x: 4864, y: 64, width: 64, height: 192 },
+    { type: "hardblock", x: 4928, y: 64, width: 64, height: 256 },
+    { type: "hardblock", x: 5120, y: 64, width: 64, height: 256 },
+    { type: "hardblock", x: 5184, y: 64, width: 64, height: 192 },
+    { type: "hardblock", x: 5248, y: 64, width: 64, height: 128 },
+    { type: "hardblock", x: 5312, y: 64, width: 64, height: 64 },
+    { type: "pillar", x: 5504, y: 64, width: 64, height: 256 },
+    { type: "enemy", x: 5632, y: 64, width: 40, height: 40, vx: -3, minX: 5504, maxX: 5760 },
+    { type: "enemy", x: 5696, y: 64, width: 40, height: 40, vx: -3, minX: 5568, maxX: 5824 },
+    { type: "hardblock", x: 6016, y: 64, width: 64, height: 64 },
+    { type: "hardblock", x: 6080, y: 64, width: 64, height: 128 },
+    { type: "hardblock", x: 6144, y: 64, width: 64, height: 192 },
+    { type: "hardblock", x: 6208, y: 64, width: 64, height: 256 },
+    { type: "hardblock", x: 6272, y: 64, width: 64, height: 320 },
+    { type: "hardblock", x: 6336, y: 64, width: 64, height: 384 },
+    { type: "hardblock", x: 6400, y: 64, width: 64, height: 448 },
+    { type: "hardblock", x: 6464, y: 64, width: 64, height: 512 },
+    { type: "hardblock", x: 6592, y: 64, width: 64, height: 64 },
+    { type: "ground", x: 6592, y: 0, width: 1308, height: 64 }
+  ]
+};
 
 function Game() {
   const [showMessage, setShowMessage] = useState(false);
   const [hidePrompt, setHidePrompt] = useState(false);
-  const marioDomRef = useRef(null);
+  
+  const pixiContainerRef = useRef(null);
   const worldDomRef = useRef(null);
-  const bgDomRef = useRef(null);
-  const enemiesRef = useRef({});
+  const appRef = useRef(null);
   const keys = useInput();
   
-  // Track abstract world coordinates and velocity
   const marioPosRef = useRef({ 
-    x: 50, 
-    y: 64, 
-    vx: 0, 
-    vy: 0, 
-    width: 64, 
-    height: 64, 
-    onGround: true,
-    jumpHeld: false,
-    inCutscene: false,
-    messageTriggered: false
+    x: 50, y: 64, vx: 0, vy: 0, width: 64, height: 64, 
+    onGround: true, jumpHeld: false, inCutscene: false, messageTriggered: false
   });
   
-  const cameraXRef = useRef(0);
   const keysRef = useRef(keys);
   const mobileKeysRef = useRef({ ArrowLeft: false, ArrowRight: false, Space: false });
   
@@ -48,330 +87,306 @@ function Game() {
   }, [keys]);
 
   useEffect(() => {
-    let animationFrameId;
+    const timer = setTimeout(() => {
+      setHidePrompt(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
 
-    const update = () => {
-      const currentKeys = keysRef.current;
-      const mario = marioPosRef.current;
+  useEffect(() => {
+    if (!pixiContainerRef.current || appRef.current) return;
 
-      // 1. Horizontal Movement & Cutscene Logic
-      if (mario.x >= 3400 && !mario.inCutscene) {
-        mario.inCutscene = true;
+    let isCancelled = false;
+
+    const initPixi = async () => {
+      const app = new PIXI.Application();
+      await app.init({ 
+        resizeTo: window,
+        backgroundAlpha: 0,
+      });
+      if (isCancelled) {
+         app.destroy(true, { children: true });
+         return;
       }
+      appRef.current = app;
+      pixiContainerRef.current.appendChild(app.canvas);
 
-      if (mario.inCutscene) {
-         if (mario.x < 3550) {
-            mario.vx = 4; // Auto-walk towards princess
-         } else {
-            mario.vx = 0; // Reached princess
-            if (!mario.messageTriggered) {
-               mario.messageTriggered = true;
-               setShowMessage(true);
-            }
-         }
-      } else {
-         if (currentKeys["ArrowRight"] || currentKeys["KeyD"] || mobileKeysRef.current.ArrowRight) {
-            mario.vx = 7;
-         } else if (currentKeys["ArrowLeft"] || currentKeys["KeyA"] || mobileKeysRef.current.ArrowLeft) {
-            mario.vx = -7;
-         } else {
-            mario.vx = 0;
-         }
-      }
-      
-      mario.x += mario.vx;
-      
-      // Left boundary
-      if (mario.x < 0) mario.x = 0;
+      app.canvas.style.position = 'absolute';
+      app.canvas.style.top = '0';
+      app.canvas.style.left = '0';
+      app.canvas.style.zIndex = '5';
 
-      // Horizontal Collision with pillars (AABB)
-      for (let obs of obstacles) {
-        if (obs.type === 'pillar') {
-          // Add +16 offset to y to prevent getting snagged on corners when jumping over
-          if (mario.x < obs.x + obs.width &&
-              mario.x + mario.width > obs.x &&
-              mario.y + 16 < obs.y + obs.height &&
-              mario.y + mario.height > obs.y) {
-             
-             if (mario.vx > 0) { // Hit left side of pillar
-                mario.x = obs.x - mario.width;
-             } else if (mario.vx < 0) { // Hit right side of pillar
-                mario.x = obs.x + obs.width;
-             }
-             mario.vx = 0;
-          }
+      const bgContainer = new PIXI.Container();
+      const worldContainer = new PIXI.Container();
+      app.stage.addChild(bgContainer);
+      app.stage.addChild(worldContainer);
+
+      const loadTexture = async (svgStr) => {
+        return await PIXI.Assets.load(`data:image/svg+xml;utf8,${encodeURIComponent(svgStr)}`);
+      };
+
+      const marioTex = await loadTexture(MarioSVGString);
+      const jssTex = await loadTexture(JSSUniversitySVGString);
+      const goombaTex = await loadTexture(GoombaSVGString);
+      const castleTex = await loadTexture(CastleSVGString);
+      const princessTex = await loadTexture(PrincessSVGString);
+      const blockTex = await loadTexture(BlockSVGString);
+
+      const jssSprite = new PIXI.Sprite(jssTex);
+      jssSprite.alpha = 0.4;
+      jssSprite.x = 600;
+      bgContainer.addChild(jssSprite);
+
+      const jssText = new PIXI.Text({ text: 'JSS\nCLASS OF 2026', style: { fill: '#ffffff', fontSize: 60, align: 'center', fontFamily: "'Press Start 2P', monospace" } });
+      jssText.x = 1200;
+      jssText.alpha = 0.3;
+      bgContainer.addChild(jssText);
+
+      const obstacles = JSON.parse(JSON.stringify(LevelConfig.items));
+      const enemySprites = [];
+
+      obstacles.forEach(obs => {
+        if (obs.type === 'ground' || obs.type === 'hardblock') {
+          const groundBox = new PIXI.TilingSprite({
+            texture: blockTex,
+            width: obs.width,
+            height: obs.height
+          });
+          groundBox.x = obs.x;
+          worldContainer.addChild(groundBox);
+          obs.sprite = groundBox;
+        } else if (obs.type === 'pillar') {
+          const pipe = new PIXI.Graphics();
+          worldContainer.addChild(pipe);
+          obs.graphics = pipe;
+        } else if (obs.type === 'enemy') {
+          const enemy = new PIXI.Sprite(goombaTex);
+          enemy.width = obs.width;
+          enemy.height = obs.height;
+          worldContainer.addChild(enemy);
+          enemySprites.push({ data: obs, sprite: enemy });
         }
-      }
+      });
 
-      // 2. Vertical Movement & Gravity
-      // Always apply gravity to consistently check ground state, ensuring you can jump off pillars
-      mario.vy -= 0.8; 
-      mario.y += mario.vy;
-      
-      mario.onGround = false;
+      const ceiling = new PIXI.TilingSprite({
+        texture: blockTex,
+        width: LevelConfig.worldWidth,
+        height: LevelConfig.ceilingHeight
+      });
+      worldContainer.addChild(ceiling);
 
-      // Check Hole Logic
-      let inHole = false;
-      for (let obs of obstacles) {
-        if (obs.type === 'hole') {
-           const marioCenter = mario.x + mario.width / 2;
-           if (marioCenter > obs.x && marioCenter < obs.x + obs.width) {
-              inHole = true;
+      const princess = new PIXI.Sprite(princessTex);
+      princess.x = LevelConfig.princessX;
+      princess.width = 64;
+      princess.height = 64;
+      worldContainer.addChild(princess);
+
+      const castle = new PIXI.Sprite(castleTex);
+      castle.x = LevelConfig.castleX;
+      castle.width = 256;
+      castle.height = 256;
+      worldContainer.addChild(castle);
+
+      const mario = new PIXI.Sprite(marioTex);
+      mario.width = 64;
+      mario.height = 64;
+      worldContainer.addChild(mario);
+
+      app.ticker.add(() => {
+        const currentKeys = keysRef.current;
+        const marioState = marioPosRef.current;
+        const sh = app.screen.height;
+
+        if (marioState.x >= LevelConfig.princessX - 200 && !marioState.inCutscene) {
+          marioState.inCutscene = true;
+        }
+
+        if (marioState.inCutscene) {
+           if (marioState.x < LevelConfig.princessX - 50) {
+              marioState.vx = 4;
+           } else {
+              marioState.vx = 0;
+              if (!marioState.messageTriggered) {
+                 marioState.messageTriggered = true;
+                 setShowMessage(true);
+              }
+           }
+        } else {
+           if (currentKeys["ArrowRight"] || currentKeys["KeyD"] || mobileKeysRef.current.ArrowRight) {
+              marioState.vx = 7;
+           } else if (currentKeys["ArrowLeft"] || currentKeys["KeyA"] || mobileKeysRef.current.ArrowLeft) {
+              marioState.vx = -7;
+           } else {
+              marioState.vx = 0;
            }
         }
-      }
+        
+        marioState.x += marioState.vx;
+        if (marioState.x < 0) marioState.x = 0;
 
-      // Floor Collision (Ground is at y=64)
-      if (!inHole && mario.y <= 64) {
-         mario.y = 64;
-         mario.vy = 0;
-         mario.onGround = true;
-      } else if (inHole && mario.y < -100) {
-         // Reset Mario if he falls down the hole
-         mario.x = 50;
-         mario.y = 150;
-         mario.vx = 0;
-         mario.vy = 0;
-      }
-
-      // Vertical Collision with pillars
-      for (let obs of obstacles) {
-        if (obs.type === 'pillar') {
-          if (mario.x < obs.x + obs.width &&
-              mario.x + mario.width > obs.x &&
-              mario.y < obs.y + obs.height &&
-              mario.y + mario.height > obs.y) {
-             
-             if (mario.vy < 0) { // Falling onto the pillar
-                mario.y = obs.y + obs.height;
-                mario.vy = 0;
-                mario.onGround = true;
-             }
-             // Removed ceiling bump for pillars since they are rooted to the ground.
-             // This completely fixes the corner teleport bug!
+        for (let obs of obstacles) {
+          if (obs.type === 'pillar' || obs.type === 'ground' || obs.type === 'hardblock') {
+            if (marioState.x < obs.x + obs.width &&
+                marioState.x + marioState.width > obs.x &&
+                marioState.y + 16 < obs.y + obs.height &&
+                marioState.y + marioState.height > obs.y) {
+               
+               if (marioState.vx > 0) marioState.x = obs.x - marioState.width;
+               else if (marioState.vx < 0) marioState.x = obs.x + obs.width;
+               marioState.vx = 0;
+            }
           }
         }
-      }
 
-      // 3. Jump Action (Single jump enforce)
-      if (!mario.inCutscene) {
-        const jumpPressed = currentKeys["Space"] || currentKeys["ArrowUp"] || currentKeys["KeyW"] || mobileKeysRef.current.Space;
-        if (jumpPressed && mario.onGround && !mario.jumpHeld) {
-          mario.vy = 18; // Increased jump power to easily clear pillars
-          mario.onGround = false;
-          mario.jumpHeld = true;
-        } else if (!jumpPressed) {
-          mario.jumpHeld = false;
+        marioState.vy -= 0.8; 
+        marioState.y += marioState.vy;
+        marioState.onGround = false;
+
+        if (marioState.y < -100) {
+           marioState.x = 50;
+           marioState.y = 150;
+           marioState.vx = 0;
+           marioState.vy = 0;
         }
-      }
 
-      // 4. Enemy AI & Collision
-      for (let i = 0; i < obstacles.length; i++) {
-        let obs = obstacles[i];
-        if (obs.type === 'enemy') {
-          // Patrol logic
+        for (let obs of obstacles) {
+          if (obs.type === 'pillar' || obs.type === 'ground' || obs.type === 'hardblock') {
+            if (marioState.x < obs.x + obs.width &&
+                marioState.x + marioState.width > obs.x &&
+                marioState.y < obs.y + obs.height &&
+                marioState.y + marioState.height > obs.y) {
+               
+               if (marioState.vy < 0) {
+                  marioState.y = obs.y + obs.height;
+                  marioState.vy = 0;
+                  marioState.onGround = true;
+               }
+            }
+          }
+        }
+
+        if (!marioState.inCutscene) {
+          const jumpPressed = currentKeys["Space"] || currentKeys["ArrowUp"] || currentKeys["KeyW"] || mobileKeysRef.current.Space;
+          if (jumpPressed && marioState.onGround && !marioState.jumpHeld) {
+            marioState.vy = 18;
+            marioState.onGround = false;
+            marioState.jumpHeld = true;
+          } else if (!jumpPressed) {
+            marioState.jumpHeld = false;
+          }
+        }
+
+        for (let obj of enemySprites) {
+          let obs = obj.data;
+          let sprite = obj.sprite;
+          
+          if (obs.dead) continue;
+
           obs.x += obs.vx;
-          if (obs.x <= obs.minX) {
-             obs.x = obs.minX;
-             obs.vx *= -1; // bounce right
-          } else if (obs.x + obs.width >= obs.maxX) {
-             obs.x = obs.maxX - obs.width;
-             obs.vx *= -1; // bounce left
-          }
+          if (obs.x <= obs.minX) { obs.x = obs.minX; obs.vx *= -1; }
+          else if (obs.x + obs.width >= obs.maxX) { obs.x = obs.maxX - obs.width; obs.vx *= -1; }
 
-          // Enemy collision with Mario
-          if (mario.x < obs.x + obs.width &&
-              mario.x + mario.width > obs.x &&
-              mario.y < obs.y + obs.height &&
-              mario.y + mario.height > obs.y) {
+          if (marioState.x < obs.x + obs.width &&
+              marioState.x + marioState.width > obs.x &&
+              marioState.y < obs.y + obs.height &&
+              marioState.y + marioState.height > obs.y) {
               
-              if (mario.vy < 0 && mario.y > obs.y + obs.height - 20) {
-                 // Stomp enemy!
-                 mario.vy = 12; // Bounce off
-                 obs.x = -1000; // Remove enemy from screen
+              if (marioState.vy < 0 && marioState.y > obs.y + 10) {
+                 marioState.vy = 12;
+                 obs.dead = true;
+                 sprite.visible = false;
               } else {
-                 // Mario takes damage (reset game for now)
-                 mario.x = 50;
-                 mario.y = 150;
-                 mario.vx = 0;
-                 mario.vy = 0;
+                 marioState.x = 50;
+                 marioState.y = 150;
+                 marioState.vx = 0;
+                 marioState.vy = 0;
               }
           }
-
-          // Directly update Enemy DOM for performance
-          if (enemiesRef.current[i]) {
-            enemiesRef.current[i].style.left = `${obs.x}px`;
-          }
+          sprite.x = obs.x;
+          sprite.y = sh - obs.y - obs.height;
         }
-      }
-      
-      // 5. Calculate Camera
-      const followThreshold = window.innerWidth / 3;
-      if (mario.x > followThreshold) {
-         cameraXRef.current = mario.x - followThreshold;
-      } else {
-         cameraXRef.current = 0;
-      }
-
-      // 6. Apply Mario DOM updates
-      if (marioDomRef.current) {
-        marioDomRef.current.style.left = `${mario.x}px`;
-        marioDomRef.current.style.bottom = `${mario.y}px`;
         
-        const svg = marioDomRef.current.querySelector('svg');
-        if (svg) {
-          if (mario.vx !== 0 && mario.onGround) svg.classList.add('running');
-          else svg.classList.remove('running');
-          
-          if (mario.vx < 0) svg.style.transform = 'scaleX(-1)';
-          else if (mario.vx > 0) svg.style.transform = 'scaleX(1)';
+        const followThreshold = app.screen.width / 3;
+        let cameraX = 0;
+        if (marioState.x > followThreshold) {
+           cameraX = marioState.x - followThreshold;
         }
-      }
-      
-      // 7. Apply Camera DOM updates
-      if (worldDomRef.current) {
-        worldDomRef.current.style.transform = `translateX(-${cameraXRef.current}px)`;
-      }
 
-      if (bgDomRef.current) {
-        bgDomRef.current.style.transform = `translateX(-${cameraXRef.current * 0.7}px)`;
-      }
-      
-      animationFrameId = requestAnimationFrame(update);
+        mario.y = sh - marioState.y - marioState.height;
+
+        if (marioState.vx < 0) {
+          mario.scale.x = -1;
+          mario.x = marioState.x + 64;
+        } else if (marioState.vx > 0) {
+          mario.scale.x = 1;
+          mario.x = marioState.x;
+        } else {
+          // preserve direction if not moving, just ensure x matches scale
+          mario.x = mario.scale.x < 0 ? marioState.x + 64 : marioState.x;
+        }
+        
+        if (marioState.vx !== 0 && marioState.onGround) {
+           mario.y += Math.sin(Date.now() / 50) * 4;
+        }
+
+        worldContainer.x = -cameraX;
+        bgContainer.x = -cameraX * 0.7;
+        
+        if (worldDomRef.current) {
+           worldDomRef.current.style.transform = `translateX(-${cameraX}px)`;
+        }
+        
+        jssSprite.y = sh - 64 - 400;
+        jssText.y = sh * 0.35;
+
+        princess.y = sh - LevelConfig.groundHeight - 64;
+        castle.y = sh - LevelConfig.groundHeight - 256;
+
+        ceiling.y = 0;
+
+        for (let obs of obstacles) {
+           if (obs.type === 'ground' || obs.type === 'hardblock') {
+              obs.sprite.y = sh - obs.y - obs.height;
+           } else if (obs.type === 'pillar') {
+              obs.graphics.clear();
+              obs.graphics.rect(obs.x, sh - obs.y - obs.height, obs.width, 24);
+              obs.graphics.fill(0x5c940d);
+              obs.graphics.stroke({ color: 0x000000, width: 2 });
+              obs.graphics.rect(obs.x + 4, sh - obs.y - obs.height, 8, 24);
+              obs.graphics.fill(0xb5e61d);
+              obs.graphics.rect(obs.x + obs.width - 12, sh - obs.y - obs.height, 8, 24);
+              obs.graphics.fill(0x184f00);
+
+              obs.graphics.rect(obs.x + 4, sh - obs.y - obs.height + 24, obs.width - 8, obs.height - 24);
+              obs.graphics.fill(0x5c940d);
+              obs.graphics.stroke({ color: 0x000000, width: 2 });
+              obs.graphics.rect(obs.x + 8, sh - obs.y - obs.height + 24, 8, obs.height - 24);
+              obs.graphics.fill(0xb5e61d);
+              obs.graphics.rect(obs.x + obs.width - 16, sh - obs.y - obs.height + 24, 8, obs.height - 24);
+              obs.graphics.fill(0x184f00);
+           }
+        }
+
+      });
     };
+    
+    initPixi();
 
-    animationFrameId = requestAnimationFrame(update);
-
-    return () => cancelAnimationFrame(animationFrameId);
+    return () => {
+      isCancelled = true;
+      if (appRef.current) {
+        appRef.current.destroy(true, { children: true });
+        appRef.current = null;
+      }
+    };
   }, []);
 
   return (
     <div className="game-container" style={{ overflow: 'hidden', position: 'relative' }}>
-      
-      {/* Cutscene overlay moved inside world wrapper */}
-
-      {/* 
-        1. Background Layer (zIndex: 0) 
-        The stars sit behind everything.
-      */}
       <div className="stars" style={{ zIndex: 0 }}></div>
+      <div ref={pixiContainerRef} style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, zIndex: 5 }} />
       
-      {/* 
-        2. Parallax Building Layer (zIndex: 1) 
-        Using low z-index so it stays far BEHIND the ground, Mario, and obstacles!
-      */}
-      <div ref={bgDomRef} style={{ position: 'absolute', width: '5000px', height: '100%', willChange: 'transform', zIndex: 1, pointerEvents: 'none' }}>
-         <div className="university-bg" style={{ position: 'absolute', opacity: 0.4, width: '800px', marginLeft: '600px', bottom: '64px' }}>
-            <JSSUniversitySVG />
-         </div>
-         {/* JSS CLASS OF 2026 text scrolling at the same speed as the building */}
-         <div className="text-slider" style={{ position: 'absolute', left: '1200px', top: '35%', textAlign: 'center', opacity: 0.3, width: '100vw' }}>
-            <div className="jss-text">JSS</div>
-            <div className="farewell-text">CLASS OF 2026</div>
-         </div>
-      </div>
-
-      <div className="ceiling" style={{ width: '100vw', zIndex: 10 }}></div>
-
-      {/* 
-        3. Foreground World Container (zIndex: 10) 
-        Everything here is placed physically in front of the building.
-      */}
-      <div ref={worldDomRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', willChange: 'transform', zIndex: 10 }}>
-        
-        {/* Solid Ground */}
-        <div className="ground" style={{ width: '5000px', left: 0 }}></div>
-
-        {/* Render Dynamic Obstacles */}
-        {obstacles.map((obs, i) => {
-          if (obs.type === 'hole') {
-            return (
-              <div 
-                key={obs.id}
-                style={{
-                  position: 'absolute',
-                  left: `${obs.x}px`,
-                  bottom: `0px`,
-                  width: `${obs.width}px`,
-                  height: `64px`, // Equal to ground height
-                  backgroundColor: '#0c0032', // Matches the night sky background perfectly
-                  zIndex: 11 // Just above the ground to mask it
-                }}
-              />
-            );
-          } else if (obs.type === 'enemy') {
-             return (
-              <div 
-                key={obs.id}
-                ref={el => enemiesRef.current[i] = el}
-                style={{
-                  position: 'absolute',
-                  left: `${obs.x}px`,
-                  bottom: `${obs.y}px`,
-                  width: `${obs.width}px`,
-                  height: `${obs.height}px`,
-                  zIndex: 15
-                }}
-              >
-                 <GoombaSVG />
-              </div>
-            );
-          } else { // Pillar styled as Detailed Mario Pipe
-            return (
-              <div 
-                key={obs.id}
-                style={{
-                  position: 'absolute',
-                  left: `${obs.x}px`,
-                  bottom: `${obs.y}px`,
-                  width: `${obs.width}px`,
-                  height: `${obs.height}px`,
-                  zIndex: 15
-                }}
-              >
-                {/* Pipe Lip */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '24px',
-                  backgroundColor: '#5c940d',
-                  border: '2px solid #000',
-                  boxSizing: 'border-box'
-                }}>
-                  <div style={{ position: 'absolute', top: 0, left: '4px', width: '8px', height: '100%', backgroundColor: '#b5e61d' }} />
-                  <div style={{ position: 'absolute', top: 0, right: '4px', width: '8px', height: '100%', backgroundColor: '#184f00' }} />
-                </div>
-                {/* Pipe Body */}
-                <div style={{
-                  position: 'absolute',
-                  top: '24px',
-                  left: '4px',
-                  width: 'calc(100% - 8px)',
-                  height: 'calc(100% - 24px)',
-                  backgroundColor: '#5c940d',
-                  border: '2px solid #000',
-                  borderTop: 'none',
-                  boxSizing: 'border-box'
-                }}>
-                  <div style={{ position: 'absolute', top: 0, left: '4px', width: '8px', height: '100%', backgroundColor: '#b5e61d' }} />
-                  <div style={{ position: 'absolute', top: 0, right: '4px', width: '8px', height: '100%', backgroundColor: '#184f00' }} />
-                </div>
-              </div>
-            );
-          }
-        })}
-
-        {/* Princess and Castle End Sequence */}
-        <div style={{ position: 'absolute', left: '3600px', bottom: '64px', width: '64px', height: '64px', zIndex: 10 }}>
-          <PrincessSVG />
-        </div>
-        <div style={{ position: 'absolute', left: '3700px', bottom: '64px', width: '256px', height: '256px', zIndex: 5 }}>
-          <CastleSVG />
-        </div>
-
-        {/* Dynamic Final Cutscene Elements */}
+      <div ref={worldDomRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', willChange: 'transform', zIndex: 10, pointerEvents: 'none' }}>
         {showMessage && (
           <>
             <style>
@@ -386,10 +401,9 @@ function Game() {
                 }
               `}
             </style>
-            {/* Heart above princess */}
             <div style={{
               position: 'absolute',
-              left: '3632px',
+              left: '7232px',
               bottom: '150px',
               color: '#ff3366',
               fontSize: '24px',
@@ -400,31 +414,30 @@ function Game() {
               ❤️
             </div>
 
-            {/* REVEAL button on Castle Door */}
             <button style={{
               position: 'absolute',
-              left: '3828px',
-              bottom: '80px',
+              left: '7600px',
+              bottom: '100px',
               backgroundColor: 'black',
               color: 'white',
-              border: '2px solid white',
-              padding: '10px 20px',
+              border: '4px solid white',
+              padding: '20px 40px',
               fontFamily: "'Press Start 2P', 'Courier New', Courier, monospace",
               fontWeight: 'bold',
-              fontSize: '18px',
+              fontSize: '28px',
               cursor: 'pointer',
               zIndex: 20,
+              pointerEvents: 'auto',
               transform: 'translateX(-50%)',
-              boxShadow: 'inset -2px -2px 0px rgba(0,0,0,0.5), inset 2px 2px 0px rgba(255,255,255,0.3)',
+              boxShadow: 'inset -4px -4px 0px rgba(0,0,0,0.5), inset 4px 4px 0px rgba(255,255,255,0.3)',
               animation: 'fadeInButton 2s ease-in'
-            }} onClick={() => alert("Reveal form!")}>
-              REVEAL
+            }} onClick={() => alert("Farewell Dashboard!")}>
+              FAREWELL DASHBOARD
             </button>
 
-            {/* Floating Pixel Text in Sky */}
             <div className="ending-text-wrapper" style={{
               position: 'absolute',
-              left: '3700px',
+              left: '7350px',
               bottom: '380px',
               transform: 'translateX(-50%)',
               zIndex: 20,
@@ -460,45 +473,10 @@ function Game() {
             </div>
           </>
         )}
-
-        {/* Mario */}
-        <div 
-          ref={marioDomRef}
-          className="mario"
-          style={{ 
-            position: 'absolute',
-            left: '50px',
-            bottom: '64px',
-            width: '64px',
-            height: '64px',
-            zIndex: 20
-          }}
-        >
-          <MarioSVG />
-        </div>
-        
-        
       </div>
 
-      {/* Mobile & Desktop Prompt Text */}
       {!hidePrompt && (
         <>
-          <div className="mobile-prompt" style={{
-            position: 'fixed',
-            top: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            color: 'white',
-            fontFamily: "'Press Start 2P', 'Courier New', Courier, monospace",
-            fontSize: '12px',
-            textAlign: 'center',
-            textShadow: '2px 2px 0 #000',
-            zIndex: 1000,
-            pointerEvents: 'none',
-            width: '90%'
-          }}>
-            MOVE MARIO USING BUTTONS BELOW
-          </div>
           <div className="desktop-prompt" style={{
             position: 'fixed',
             top: '30%',
@@ -506,19 +484,18 @@ function Game() {
             transform: 'translate(-50%, -50%)',
             color: 'white',
             fontFamily: "'Press Start 2P', 'Courier New', Courier, monospace",
-            fontSize: '28px',
             textAlign: 'center',
             textShadow: '4px 4px 0 #000',
             zIndex: 1000,
             pointerEvents: 'none',
             width: '90%'
           }}>
-            MAKE MARIO REACH THE QUEEN
+            <div style={{ fontSize: '28px', marginBottom: '20px' }}>REACH THE END TO REVEAL YOUR INVITATION</div>
+            <div style={{ fontSize: '18px', color: '#ffcc00' }}>MOVE MARIO USING WASD OR ARROW KEYS</div>
           </div>
         </>
       )}
 
-      {/* Mobile Controls Overlay */}
       <div className="mobile-controls" style={{
         position: 'fixed',
         bottom: '20px',
