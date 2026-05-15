@@ -1,3 +1,36 @@
+export const MarioDeadSVGString = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="64" height="64" shape-rendering="crispEdges">
+  <!-- hat -->
+  <rect x="5" y="0" width="5" height="1" fill="#FF0000"/>
+  <rect x="4" y="1" width="9" height="1" fill="#FF0000"/>
+  <!-- face -->
+  <rect x="4" y="2" width="3" height="1" fill="#8B4513"/>
+  <rect x="7" y="2" width="2" height="1" fill="#FFA07A"/>
+  <rect x="9" y="2" width="2" height="1" fill="#FFA07A"/>
+  <rect x="4" y="3" width="7" height="2" fill="#FFA07A"/>
+  <!-- X eyes -->
+  <rect x="5" y="3" width="1" height="1" fill="#000"/>
+  <rect x="7" y="3" width="1" height="1" fill="#000"/>
+  <rect x="6" y="4" width="1" height="1" fill="#000"/>
+  <rect x="9" y="3" width="1" height="1" fill="#000"/>
+  <rect x="11" y="3" width="1" height="1" fill="#000"/>
+  <rect x="10" y="4" width="1" height="1" fill="#000"/>
+  <!-- body -->
+  <rect x="3" y="5" width="2" height="1" fill="#8B4513"/>
+  <rect x="5" y="5" width="6" height="1" fill="#FFA07A"/>
+  <rect x="11" y="5" width="2" height="1" fill="#000"/>
+  <rect x="3" y="6" width="10" height="2" fill="#FF0000"/>
+  <rect x="2" y="8" width="12" height="1" fill="#FF0000"/>
+  <rect x="2" y="9" width="12" height="1" fill="#0000FF"/>
+  <rect x="2" y="10" width="2" height="1" fill="#FFA07A"/>
+  <rect x="4" y="10" width="8" height="1" fill="#0000FF"/>
+  <rect x="12" y="10" width="2" height="1" fill="#FFA07A"/>
+  <rect x="2" y="11" width="12" height="1" fill="#FFA07A"/>
+  <!-- raised arms -->
+  <rect x="0" y="6" width="2" height="2" fill="#FFA07A"/>
+  <rect x="14" y="6" width="2" height="2" fill="#FFA07A"/>
+</svg>`;
+
 export const MarioSVGString = `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="64" height="64" shape-rendering="crispEdges">
   <rect x="5" y="0" width="5" height="1" fill="#FF0000"/>
@@ -202,5 +235,26 @@ export const BlockSVGString = `
   <rect x="2" y="14" width="13" height="1" fill="#000000"/>
   <rect x="2" y="2" width="1" height="1" fill="#000000"/>
   <rect x="13" y="13" width="1" height="1" fill="#f8d8b0"/>
+</svg>
+`;
+
+export const SpringSVGString = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="64" height="64" shape-rendering="crispEdges">
+  <rect x="2" y="1" width="12" height="2" fill="#D82800"/>
+  <rect x="2" y="13" width="12" height="2" fill="#D82800"/>
+  <rect x="6" y="3" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="5" y="4" width="1" height="2" fill="#FC9838"/>
+  <rect x="4" y="5" width="1" height="2" fill="#FC9838"/>
+  <rect x="2" y="7" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="4" y="9" width="1" height="2" fill="#FC9838"/>
+  <rect x="5" y="10" width="1" height="2" fill="#FC9838"/>
+  <rect x="6" y="11" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="8" y="3" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="10" y="4" width="1" height="2" fill="#FC9838"/>
+  <rect x="11" y="5" width="1" height="2" fill="#FC9838"/>
+  <rect x="12" y="7" width="2" height="2" fill="#FFFFFF"/>
+  <rect x="11" y="9" width="1" height="2" fill="#FC9838"/>
+  <rect x="10" y="10" width="1" height="2" fill="#FC9838"/>
+  <rect x="8" y="11" width="2" height="2" fill="#FFFFFF"/>
 </svg>
 `;

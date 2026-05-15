@@ -1,0 +1,770 @@
+{
+  "worldWidth": 16640,
+  "princessX": 13376,
+  "castleX": 14336,
+  "groundHeight": 64,
+  "ceilingHeight": 100,
+  "items": [
+    {
+      "type": "ground",
+      "x": 0,
+      "y": 0,
+      "width": 2944,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 3072,
+      "y": 0,
+      "width": 1920,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 5120,
+      "y": 0,
+      "width": 1408,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 6592,
+      "y": 0,
+      "width": 832,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 7616,
+      "y": 0,
+      "width": 128,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 7872,
+      "y": 0,
+      "width": 192,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 8192,
+      "y": 0,
+      "width": 576,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 9024,
+      "y": 0,
+      "width": 640,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 9920,
+      "y": 0,
+      "width": 704,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 10944,
+      "y": 0,
+      "width": 1984,
+      "height": 64
+    },
+    {
+      "type": "ground",
+      "x": 13120,
+      "y": 0,
+      "width": 3520,
+      "height": 64
+    },
+    {
+      "type": "enemy",
+      "x": 768,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 640,
+      "maxX": 896
+    },
+    {
+      "type": "enemy",
+      "x": 1088,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 960,
+      "maxX": 1216
+    },
+    {
+      "type": "enemy",
+      "x": 1472,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 1344,
+      "maxX": 1600
+    },
+    {
+      "type": "enemy",
+      "x": 1536,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 1408,
+      "maxX": 1664
+    },
+    {
+      "type": "pillar",
+      "x": 1792,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "enemy",
+      "x": 1984,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 1856,
+      "maxX": 2112
+    },
+    {
+      "type": "pillar",
+      "x": 2112,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "enemy",
+      "x": 2304,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 2176,
+      "maxX": 2432
+    },
+    {
+      "type": "pillar",
+      "x": 2432,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "enemy",
+      "x": 2688,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 2560,
+      "maxX": 2816
+    },
+    {
+      "type": "enemy",
+      "x": 2752,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 2624,
+      "maxX": 2880
+    },
+    {
+      "type": "enemy",
+      "x": 3264,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 3136,
+      "maxX": 3392
+    },
+    {
+      "type": "enemy",
+      "x": 3328,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 3200,
+      "maxX": 3456
+    },
+    {
+      "type": "enemy",
+      "x": 3840,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 3712,
+      "maxX": 3968
+    },
+    {
+      "type": "hardblock",
+      "x": 4160,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "hardblock",
+      "x": 4224,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 4288,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 4352,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 4480,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 4544,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 4608,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 4672,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "hardblock",
+      "x": 4736,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "hardblock",
+      "x": 4800,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 4864,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 4928,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 5120,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 5184,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 5248,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 5312,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "pillar",
+      "x": 5504,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "enemy",
+      "x": 5632,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 5504,
+      "maxX": 5760
+    },
+    {
+      "type": "enemy",
+      "x": 5696,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 5568,
+      "maxX": 5824
+    },
+    {
+      "type": "hardblock",
+      "x": 6016,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "hardblock",
+      "x": 6080,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 6144,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 6208,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 6272,
+      "y": 64,
+      "width": 64,
+      "height": 320
+    },
+    {
+      "type": "hardblock",
+      "x": 6336,
+      "y": 64,
+      "width": 64,
+      "height": 384
+    },
+    {
+      "type": "hardblock",
+      "x": 6400,
+      "y": 64,
+      "width": 64,
+      "height": 448
+    },
+    {
+      "type": "hardblock",
+      "x": 6464,
+      "y": 64,
+      "width": 64,
+      "height": 512
+    },
+    {
+      "type": "hardblock",
+      "x": 6592,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "enemy",
+      "x": 7616,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 7488,
+      "maxX": 7744
+    },
+    {
+      "type": "spring",
+      "x": 7936,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "pillar",
+      "x": 8192,
+      "y": 64,
+      "width": 64,
+      "height": 320
+    },
+    {
+      "type": "enemy",
+      "x": 8256,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 8256,
+      "maxX": 8384
+    },
+    {
+      "type": "enemy",
+      "x": 8320,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 8256,
+      "maxX": 8384
+    },
+    {
+      "type": "pillar",
+      "x": 8448,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "pillar",
+      "x": 8704,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 9024,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 9088,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 9152,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 9216,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 9280,
+      "y": 64,
+      "width": 64,
+      "height": 384
+    },
+    {
+      "type": "hardblock",
+      "x": 9344,
+      "y": 64,
+      "width": 64,
+      "height": 384
+    },
+    {
+      "type": "enemy",
+      "x": 9408,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 9408,
+      "maxX": 9600
+    },
+    {
+      "type": "enemy",
+      "x": 9472,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 9408,
+      "maxX": 9600
+    },
+    {
+      "type": "hardblock",
+      "x": 9728,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 9792,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "enemy",
+      "x": 9728,
+      "y": 256,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 9728,
+      "maxX": 9792
+    },
+    {
+      "type": "hardblock",
+      "x": 9920,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "hardblock",
+      "x": 9984,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 10048,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 10112,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "enemy",
+      "x": 10176,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 10176,
+      "maxX": 10176
+    },
+    {
+      "type": "hardblock",
+      "x": 10240,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 10304,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 10368,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 10432,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "pillar",
+      "x": 10560,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "enemy",
+      "x": 11072,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 10944,
+      "maxX": 11968
+    },
+    {
+      "type": "enemy",
+      "x": 11136,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 10944,
+      "maxX": 11968
+    },
+    {
+      "type": "enemy",
+      "x": 11264,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 10944,
+      "maxX": 11968
+    },
+    {
+      "type": "enemy",
+      "x": 11392,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 10944,
+      "maxX": 11968
+    },
+    {
+      "type": "enemy",
+      "x": 11520,
+      "y": 64,
+      "width": 40,
+      "height": 40,
+      "vx": -3,
+      "minX": 10944,
+      "maxX": 11968
+    },
+    {
+      "type": "pillar",
+      "x": 12032,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 12224,
+      "y": 64,
+      "width": 64,
+      "height": 64
+    },
+    {
+      "type": "hardblock",
+      "x": 12288,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    },
+    {
+      "type": "hardblock",
+      "x": 12352,
+      "y": 64,
+      "width": 64,
+      "height": 192
+    },
+    {
+      "type": "hardblock",
+      "x": 12416,
+      "y": 64,
+      "width": 64,
+      "height": 256
+    },
+    {
+      "type": "hardblock",
+      "x": 12480,
+      "y": 64,
+      "width": 64,
+      "height": 320
+    },
+    {
+      "type": "hardblock",
+      "x": 12544,
+      "y": 64,
+      "width": 64,
+      "height": 384
+    },
+    {
+      "type": "hardblock",
+      "x": 12608,
+      "y": 64,
+      "width": 64,
+      "height": 448
+    },
+    {
+      "type": "hardblock",
+      "x": 12672,
+      "y": 64,
+      "width": 64,
+      "height": 512
+    },
+    {
+      "type": "hardblock",
+      "x": 12736,
+      "y": 64,
+      "width": 64,
+      "height": 576
+    },
+    {
+      "type": "hardblock",
+      "x": 12800,
+      "y": 64,
+      "width": 64,
+      "height": 576
+    },
+    {
+      "type": "hardblock",
+      "x": 13120,
+      "y": 64,
+      "width": 64,
+      "height": 128
+    }
+  ]
+}
