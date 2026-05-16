@@ -817,6 +817,7 @@ function Game({ onOpenDashboard }) {
         width: app.screen.width + 64,   // viewport width + 1 tile margin
         height: LevelConfig.ceilingHeight
       });
+      ceiling.visible = false; // Remove roof blocks
       // ceiling lives in SCREEN space (stage, not worldContainer)
       app.stage.addChild(ceiling);
 

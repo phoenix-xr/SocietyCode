@@ -170,20 +170,6 @@
   filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
 }
 
-/* Date pill */
-.s1-date-pill {
-  border: 1.5px solid rgba(255, 255, 255, 0.75);
-  border-radius: 999px;
-  padding: 8px 32px;
-  font-family: 'Inter', 'Bebas Neue', sans-serif;
-  font-size: clamp(1rem, 1.8vw, 1.25rem);
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 0.5px;
-  margin-bottom: 32px;
-  text-align: center;
-}
-
 .start-btn {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 2.8rem;
@@ -192,6 +178,7 @@
   border: none;
   padding: 0.6rem 5rem;
   border-radius: 60px;
+  margin-top: 40px;
   cursor: pointer;
   letter-spacing: 2px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), inset 0 3px 8px rgba(255, 255, 255, 0.8), inset 0 -3px 5px rgba(0, 0, 0, 0.2);

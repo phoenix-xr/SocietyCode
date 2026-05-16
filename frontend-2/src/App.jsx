@@ -77,6 +77,7 @@ function App() {
     { name: "DARSHITA JAIN", phone: "+91 8700049486" }
   ]);
   const [loginLoading, setLoginLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   // Stores result of background session check: null = pending, false = invalid, 'game'|'dashboard' = valid
   const [savedSession, setSavedSession] = useState(null);
 
@@ -211,9 +212,6 @@ function App() {
               <p className="s1-welcome">WELCOME SENIORS</p>
               <p className="s1-subtitle">YOUR FAREWELL JOURNEY BEGINS HERE</p>
               <h1 className="s1-title">FAREWELL '26</h1>
-              <div className="s1-date-pill">
-                Date and Time : 23rd May, 2026 - 03:00pm onwards
-              </div>
               <button className="start-btn" onClick={() => {
                 if (savedSession) {
                   triggerTransition(savedSession);
@@ -255,12 +253,18 @@ function App() {
                   <div className="input-wrapper">
                     <img src={lockSvg} alt="Lock" className="input-lock-icon" />
                     <input 
-                      type="password" 
+                      type={showPassword ? "text" : "password"} 
                       placeholder="Enter Password" 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-                    <EyeIcon />
+                    <div 
+                      onClick={() => setShowPassword(!showPassword)} 
+                      style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                      title={showPassword ? "Hide password" : "Show password"}
+                    >
+                      <EyeIcon />
+                    </div>
                   </div>
                 </div>
               </div>
