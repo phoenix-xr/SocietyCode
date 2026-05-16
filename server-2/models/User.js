@@ -6,7 +6,7 @@ const credsSchema = new mongoose.Schema({
   Asigned_to: [{ name: String, phone: String }],
   invitation_img: Buffer,
   profile_img:Buffer,
-  recieved_messages: [{ id:{type:String,required:true},name: String, message: String, guess_left: Number }],
+  recieved_messages: [{ id:{type:String,required:true},name: String, message: String, guess_left: Number, is_guessed: { type: Boolean, default: false } }],
   sent_to: [{ type: String }],
   level_complete:{type:Boolean}
 }, { collection: 'Farewell' });

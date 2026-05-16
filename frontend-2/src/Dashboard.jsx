@@ -122,7 +122,11 @@ const Dashboard = ({ username: propUser, password: propPass }) => {
           setReceivedMessages(data.messages);
           const init = {};
           data.messages.forEach((m) => {
-            init[m.id] = { guessName: '', status: null, guessLeft: m.guess_left };
+            init[m.id] = { 
+              guessName: m.is_guessed ? m.name : '', 
+              status: m.is_guessed ? 'RIGHT' : null, 
+              guessLeft: m.guess_left 
+            };
           });
           setGuesses(init);
         }

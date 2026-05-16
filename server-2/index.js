@@ -144,7 +144,9 @@ app.post('/api/get_recieved_messages', async (req, res) => {
     const messages = record.recieved_messages.map(msg => ({
       id: msg.id,
       message: msg.message,
-      guess_left: msg.guess_left
+      guess_left: msg.guess_left,
+      is_guessed: !!msg.is_guessed,
+      name: msg.is_guessed ? msg.name : undefined
     }));
     
     res.json({ success: true, messages });
@@ -305,6 +307,9 @@ app.post('/api/check_guess', async (req, res) => {
     }
     
     if (messageObj.name === guess_name) {
+      userRecord.recieved_messages[messageIndex].is_guessed = true;
+      userRecord.markModified('recieved_messages');
+      await userRecord.save();
       return res.json({ success: true, matched: true });
     } else {
       userRecord.recieved_messages[messageIndex].guess_left -= 1;
