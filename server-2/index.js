@@ -11,9 +11,28 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI, { dbName: 'Farewell' })
-  .then(() => console.log("Connected to MongoDB (Database: Farewell)"))
-  .catch(err => console.error("MongoDB connection error:", err));
+const connectDB = async () => {
+  // If already connected or connecting, do nothing
+  if (mongoose.connection.readyState >= 1) return;
+  
+  try {
+    await mongoose.connect(MONGODB_URI, { 
+      dbName: 'Farewell',
+      // Recommended options for Serverless
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+    });
+    console.log("Connected to MongoDB (Database: Farewell)");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+  }
+};
+
+// Middleware to ensure DB connection before handling any API route
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 // get_names(): returns list of full names of seniors, excluding those already messaged by the sender
 app.post('/api/get_names', async (req, res) => {
