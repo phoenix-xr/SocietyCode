@@ -5,6 +5,7 @@ import bgSvg from './assets/bg.svg';
 import gotLatentLogo from './assets/ncs_got_latent.svg';
 import lockSvg from './assets/lock.svg';
 import Game from './Game';
+import Dashboard from './Dashboard';
 
 // Preload critical images as early as possible
 const preloadImages = [ncsLogo, bgSvg, gotLatentLogo, lockSvg];
@@ -68,15 +69,50 @@ const GoldenLockIconSmall = () => (
 function App() {
   const [screen, setScreen] = useState(1);
   const [curtainPhase, setCurtainPhase] = useState('idle');
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState(localStorage.getItem('fw_username') || "");
+  const [password, setPassword] = useState(localStorage.getItem('fw_password') || "");
   const [juniors, setJuniors] = useState([
-    // Mock data based on the provided design
     { name: "PIYUSH GAUTAM", phone: "+91 9555580183" },
     { name: "BHASKAR SHAH", phone: "+91 6307946728" },
     { name: "DARSHITA JAIN", phone: "+91 8700049486" }
   ]);
   const [loginLoading, setLoginLoading] = useState(false);
+  // Stores result of background session check: null = pending, false = invalid, 'game'|'dashboard' = valid
+  const [savedSession, setSavedSession] = useState(null);
+
+  const BACKEND = 'http://localhost:3000';
+
+  // ── Background session check on mount (doesn’t skip welcome screen) ──
+  useEffect(() => {
+    const savedUser = localStorage.getItem('fw_username');
+    const savedPass = localStorage.getItem('fw_password');
+    if (!savedUser || !savedPass) { setSavedSession(false); return; }
+
+    fetch(`${BACKEND}/api/check_pass`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user: savedUser, password: savedPass }),
+    })
+      .then((r) => r.json())
+      .then(async (authData) => {
+        if (!authData.success) {
+          localStorage.removeItem('fw_username');
+          localStorage.removeItem('fw_password');
+          setUsername(''); setPassword('');
+          setSavedSession(false);
+          return;
+        }
+        const lvlRes = await fetch(`${BACKEND}/api/level_status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: savedUser }),
+        });
+        const lvlData = await lvlRes.json();
+        setSavedSession(lvlData.success && lvlData.level_complete ? 'dashboard' : 'game');
+      })
+      .catch(() => setSavedSession(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -85,24 +121,44 @@ function App() {
     }
     setLoginLoading(true);
     try {
-      const res = await fetch('https://society-backend-ashy.vercel.app/api/check_pass', {
+      // 1. Validate credentials
+      const authRes = await fetch(`${BACKEND}/api/check_pass`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user: username, password })
       });
-      const data = await res.json();
-      if (data.success) {
-        triggerTransition('game');
+      const authData = await authRes.json();
+
+      if (!authData.success) {
+        alert(authData.error || "Invalid credentials");
+        return;
+      }
+
+      // 2. Persist session for Dashboard
+      localStorage.setItem('fw_username', username);
+      localStorage.setItem('fw_password', password);
+
+      // 3. Check if level already complete → skip game, go straight to dashboard
+      const lvlRes = await fetch(`${BACKEND}/api/level_status`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+      const lvlData = await lvlRes.json();
+
+      if (lvlData.success && lvlData.level_complete) {
+        triggerTransition('dashboard');
       } else {
-        alert(data.error || "Invalid credentials");
+        triggerTransition('game');
       }
     } catch (err) {
       console.error("Login error:", err);
-      alert("Error checking credentials. Please try again.");
+      alert("Error connecting to server. Please try again.");
     } finally {
       setLoginLoading(false);
     }
   };
+
 
   const triggerTransition = (targetScreen) => {
     setCurtainPhase('closing');
@@ -117,7 +173,7 @@ function App() {
 
   // Fetch assigned juniors when moving to screen 4
   const fetchAssignedJuniors = (user) => {
-    fetch('https://society-backend-ashy.vercel.app/api/get_assigned', {
+    fetch('http://localhost:3000/api/get_assigned', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user })
@@ -137,32 +193,37 @@ function App() {
     <div className="app-container">
       {screen !== 'game' && <img src={bgSvg} alt="Background" className="background-svg" />}
 
-      <img src={ncsLogo} alt="NCS Logo" className="global-ncs-logo" />
+      {screen !== 'dashboard' && <img src={ncsLogo} alt="NCS Logo" className="global-ncs-logo" />}
 
       <div className={`curtain left-curtain ${curtainPhase}`} style={{ zIndex: 9999 }} />
       <div className={`curtain right-curtain ${curtainPhase}`} style={{ zIndex: 9999 }} />
 
+      {/* Always render content; game/dashboard/login screens shown based on screen state */}
       {screen === 'game' ? (
-        <Game />
+        <Game onOpenDashboard={() => triggerTransition('dashboard')} />
+      ) : screen === 'dashboard' ? (
+        <Dashboard username={username} password={password} />
       ) : (
         <div className="content-layer">
         {screen === 1 && (
           <div className="screen-1">
-            <div className="logo-container">
-              <img src={ncsLogo} alt="NCS Logo" />
+            <div className="s1-backdrop">
+              <p className="s1-welcome">WELCOME SENIORS</p>
+              <p className="s1-subtitle">YOUR FAREWELL JOURNEY BEGINS HERE</p>
+              <h1 className="s1-title">FAREWELL '26</h1>
+              <div className="s1-date-pill">
+                Date and Time : 23rd May, 2026 - 03:00pm onwards
+              </div>
+              <button className="start-btn" onClick={() => {
+                if (savedSession) {
+                  triggerTransition(savedSession);
+                } else {
+                  triggerTransition(2);
+                }
+              }}>
+                START NOW
+              </button>
             </div>
-            
-            <h1 className="welcome-text">
-              WELCOME SENIORS<span role="img" aria-label="graduation cap">🎓</span>
-            </h1>
-            
-            <h2 className="subtitle-text">
-              YOUR FAREWELL JOURNEY BEGINS HERE — CLICK START NOW
-            </h2>
-            
-            <button className="start-btn" onClick={() => triggerTransition(2)}>
-              START NOW
-            </button>
           </div>
         )}
 

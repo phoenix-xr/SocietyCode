@@ -676,7 +676,7 @@ const LevelConfig = {
   ]
 }
 ;
-function Game() {
+function Game({ onOpenDashboard }) {
   const [showMessage, setShowMessage] = useState(false);
   const [hidePrompt, setHidePrompt] = useState(false);
   
@@ -699,6 +699,24 @@ function Game() {
       setTimeout(() => setHidePrompt(true), 0);
     }
   }, [keys]);
+
+  // Called when user clicks FAREWELL DASHBOARD button
+  const handleFarewellClick = async () => {
+    const username = localStorage.getItem('fw_username');
+    if (username) {
+      try {
+        await fetch('http://localhost:3000/api/update_game_status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username }),
+        });
+      } catch (err) {
+        console.error('update_game_status failed:', err);
+        // still open dashboard even if this call fails
+      }
+    }
+    onOpenDashboard?.();
+  };
 
 
   useEffect(() => {
@@ -1398,7 +1416,7 @@ function Game() {
               boxShadow: '0 0 30px #FFD700, 0 0 60px rgba(255,215,0,0.4), inset -4px -4px 0px rgba(0,0,0,0.6)',
               textShadow: '0 0 10px #FFD700',
               animation: 'farewell-pulse 2s ease-in-out infinite',
-            }} onClick={() => alert('Farewell Dashboard!')}>
+            }} onClick={handleFarewellClick}>
               FAREWELL DASHBOARD
             </button>
             <style>{`

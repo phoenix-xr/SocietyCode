@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700&display=swap');
+
 .app-container {
   position: relative;
   width: 100vw;
@@ -100,50 +102,86 @@
 }
 
 /* --- Screen 1 Styles --- */
-.logo-container {
-  margin-bottom: 4rem;
-}
-
-.logo-container img {
-  height: 120px;
-  object-fit: contain;
-}
-
-.welcome-text {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 6rem;
-  margin-bottom: 0.5rem;
-  letter-spacing: 2px;
-  
-  background: linear-gradient(to bottom, #FDF092, #DCA93C);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  
-  filter: drop-shadow(3px 4px 5px rgba(0, 0, 0, 0.6));
-  
+.screen-1 {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  animation: fadeIn 0.6s ease-in-out;
 }
 
-.welcome-text span {
-  -webkit-text-fill-color: initial;
-  color: initial;
+/* Blurred backdrop panel (the frosted curtain overlay) */
+.s1-backdrop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding: 48px 80px 52px;
+  background: rgba(9, 22, 109, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  width: 88%;
+  max-width: 960px;
 }
 
-.subtitle-text {
+/* "WELCOME SENIORS" — bold condensed gold */
+.s1-welcome {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 3.2rem;
-  margin-bottom: 3.5rem;
-  letter-spacing: 1.5px;
-  
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 3px;
+  margin: 0 0 4px;
   background: linear-gradient(to bottom, #FDF092, #DCA93C);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  color: transparent;
-  
-  filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.6));
+  background-clip: text;
+  filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+}
+
+/* "YOUR FAREWELL JOURNEY BEGINS HERE" — same size as WELCOME SENIORS */
+.s1-subtitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 3px;
+  margin: 0 0 20px;
+  background: linear-gradient(to bottom, #FDF092, #DCA93C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(1px 2px 3px rgba(0,0,0,0.5));
+}
+
+/* "FAREWELL '26" — large serif */
+.s1-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(5rem, 9vw, 7rem);
+  font-weight: 400;
+  letter-spacing: 4px;
+  margin: 0 0 24px;
+  line-height: 1;
+  white-space: nowrap;  /* keep FAREWELL '26 on one line */
+  background: linear-gradient(180deg, #FDF09B 0%, #C8902B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
+}
+
+/* Date pill */
+.s1-date-pill {
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 999px;
+  padding: 8px 32px;
+  font-family: 'Inter', 'Bebas Neue', sans-serif;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.5px;
+  margin-bottom: 32px;
+  text-align: center;
 }
 
 .start-btn {
@@ -371,70 +409,114 @@
   font-family: monospace;
 }
 
-/* --- Mobile Responsiveness for Screen 1 --- */
+/* ─── Mobile Responsiveness ─────────────────────── */
 @media (max-width: 768px) {
+
+  /* Smaller corner logos so they don't eat into content */
   .global-ncs-logo {
-    top: 15px;
-    left: 15px;
-    height: 35px;
+    top: 12px;
+    left: 12px;
+    height: 30px;
   }
 
-  .logo-container {
-    margin-bottom: 2.5rem;
-  }
-
-  .logo-container img {
-    height: 80px;
-  }
-
-  .welcome-text {
-    font-size: 4rem;
-    flex-wrap: wrap;
+  /* Remove the negative pull-up so backdrop stays fully visible */
+  .content-layer {
+    margin-top: 0;
+    padding: 0 0 16px;
     justify-content: center;
-    text-align: center;
-    line-height: 1.1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .subtitle-text {
-    font-size: 2rem;
-    margin-bottom: 2.5rem;
-    padding: 0 1rem;
-    line-height: 1.2;
-    text-align: center;
+  /* Backdrop: full width, less side padding */
+  .s1-backdrop {
+    width: 92%;
+    padding: 32px 20px 36px;
   }
 
-  .start-btn {
-    font-size: 2.2rem;
-    padding: 0.5rem 3.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo-container {
-    margin-bottom: 2rem;
+  .s1-welcome,
+  .s1-subtitle {
+    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+    letter-spacing: 2px;
   }
 
-  .logo-container img {
-    height: 60px;
+  /* Keep FAREWELL '26 on one line but scale to fit */
+  .s1-title {
+    font-size: clamp(2.8rem, 13vw, 5.5rem);
   }
 
-  .welcome-text {
-    font-size: 3rem;
-    gap: 4px;
-  }
-
-  .subtitle-text {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
+  .s1-date-pill {
+    font-size: clamp(0.75rem, 2.8vw, 0.95rem);
+    padding: 8px 18px;
+    margin-bottom: 24px;
   }
 
   .start-btn {
-    font-size: 1.8rem;
-    padding: 0.5rem 3rem;
+    font-size: 1.9rem;
+    padding: 0.55rem 3.5rem;
+  }
+
+  /* Login screen: tighter glass box */
+  .glass-box {
+    width: 94%;
+    padding: 2rem 1.5rem;
+  }
+
+  .latent-logo-container {
+    max-width: 240px;
   }
 
   .input-lock-icon {
     width: 20px;
     height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Backdrop nearly full width */
+  .s1-backdrop {
+    width: 97%;
+    padding: 24px 14px 28px;
+  }
+
+  .s1-welcome,
+  .s1-subtitle {
+    font-size: clamp(1.1rem, 6.5vw, 1.6rem);
+    letter-spacing: 1.5px;
+  }
+
+  /* At 375px: 14vw = 52px ≈ 3.25rem — fits "FAREWELL '26" */
+  .s1-title {
+    font-size: clamp(2.2rem, 13.5vw, 4rem);
+    letter-spacing: 2px;
+  }
+
+  .s1-date-pill {
+    font-size: 0.75rem;
+    padding: 6px 14px;
+    margin-bottom: 20px;
+  }
+
+  .start-btn {
+    font-size: 1.6rem;
+    padding: 0.5rem 2.5rem;
+  }
+
+  /* Login screen */
+  .glass-box {
+    width: 97%;
+    padding: 1.75rem 1.25rem;
+  }
+
+  .box-header {
+    font-size: 2rem;
+  }
+
+  .unlock-btn {
+    font-size: 1.5rem;
+    padding: 0.5rem 2rem;
   }
 }

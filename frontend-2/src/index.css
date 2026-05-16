@@ -16,10 +16,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #000; /* Fallback if SVG fails */
   color: white;
-  overflow: hidden;
+  overflow-x: hidden; /* allow vertical scroll, block horizontal */
 }
 
 #root {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh; /* grow with content */
 }
