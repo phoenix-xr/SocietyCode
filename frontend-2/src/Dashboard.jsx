@@ -4,7 +4,7 @@ import ncsLogo from './assets/ncs.png';
 import gotLatentLogo from './assets/ncs_got_latent.svg';
 import bgSvg from './assets/bg.svg';
 
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://society-backend-ashy.vercel.app";
 
 // Converts API format "first_last" → display format "First Last"
 const formatName = (raw = '') =>

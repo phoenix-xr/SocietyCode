@@ -80,7 +80,7 @@ function App() {
   // Stores result of background session check: null = pending, false = invalid, 'game'|'dashboard' = valid
   const [savedSession, setSavedSession] = useState(null);
 
-  const BACKEND = 'http://localhost:3000';
+  const BACKEND = 'https://society-backend-ashy.vercel.app';
 
   // ── Background session check on mount (doesn’t skip welcome screen) ──
   useEffect(() => {
@@ -173,7 +173,7 @@ function App() {
 
   // Fetch assigned juniors when moving to screen 4
   const fetchAssignedJuniors = (user) => {
-    fetch('http://localhost:3000/api/get_assigned', {
+    fetch('https://society-backend-ashy.vercel.app/api/get_assigned', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user })

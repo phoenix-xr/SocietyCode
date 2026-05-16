@@ -705,7 +705,7 @@ function Game({ onOpenDashboard }) {
     const username = localStorage.getItem('fw_username');
     if (username) {
       try {
-        await fetch('http://localhost:3000/api/update_game_status', {
+        await fetch('https://society-backend-ashy.vercel.app/api/update_game_status', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username }),
