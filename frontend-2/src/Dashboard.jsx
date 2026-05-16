@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './Dashboard.css';
 import ncsLogo from './assets/ncs.png';
 import gotLatentLogo from './assets/ncs_got_latent.svg';
-import yashImg from './assets/Yash.png';
 import bgSvg from './assets/bg.svg';
 
 const BACKEND_URL = "http://localhost:3000";
